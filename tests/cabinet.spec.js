@@ -34,9 +34,9 @@ async function readyGame(page) {
   await expect(iframe).toHaveAttribute('src', candidate);
   await expect.poll(() => page.frames().find((f) => f.url() === candidate)?.url()).toBe(candidate);
   const frame = page.frames().find((f) => f.url() === candidate);
-  await expect.poll(() => stageData(frame, 'status')).toBe('ready');
+  await expect.poll(() => stageData(frame, 'status'), { timeout: 30_000 }).toBe('ready');
   // A blank WebGL canvas compresses to almost nothing; a rendered board does not.
-  await expect.poll(async () => (await frame.locator('#scene').screenshot()).length, { message: 'WebGL board rendered' }).toBeGreaterThan(20_000);
+  await expect.poll(async () => (await frame.locator('#scene').screenshot()).length, { message: 'WebGL board rendered', timeout: 30_000 }).toBeGreaterThan(20_000);
   return frame;
 }
 

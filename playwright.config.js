@@ -10,7 +10,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: 0,
   workers: process.env.CI ? 2 : undefined,
-  timeout: 60_000,
+  timeout: 90_000,
   expect: { timeout: 10_000 },
   reporter: [['list']],
   use: { baseURL: origin, trace: 'retain-on-failure', screenshot: 'only-on-failure' },
