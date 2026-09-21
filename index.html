@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Mona Breaker: a 3D GitHub-themed brick breaker. Break commits, squash bugs, and merge the pull request.">
+  <title>Mona Breaker</title>
+  <link rel="icon" type="image/svg+xml" href="./assets/mark-github.svg">
+  <script>
+    (() => {
+      let theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      try {
+        const saved = localStorage.getItem('mona-breaker-theme');
+        if (saved === 'dark' || saved === 'light') theme = saved;
+      } catch { /* storage unavailable */ }
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./src/main.js"></script>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Mona Breaker home">
+        <svg aria-hidden="true" viewBox="0 0 16 16" fill="currentColor"><path d="M6.766 11.328c-2.063-.25-3.516-1.734-3.516-3.656 0-.781.281-1.625.75-2.188-.203-.515-.172-1.609.063-2.062.625-.078 1.468.25 1.968.703.594-.187 1.219-.281 1.985-.281.765 0 1.39.094 1.953.265.484-.437 1.344-.765 1.969-.687.218.422.25 1.515.046 2.047.5.593.766 1.39.766 2.203 0 1.922-1.453 3.375-3.547 3.64.531.344.89 1.094.89 1.954v1.625c0 .468.391.734.86.547C13.781 14.359 16 11.53 16 8.03 16 3.61 12.406 0 7.984 0 3.563 0 0 3.61 0 8.031a7.88 7.88 0 0 0 5.172 7.422c.422.156.828-.125.828-.547v-1.25c-.219.094-.5.156-.75.156-1.031 0-1.64-.562-2.078-1.609-.172-.422-.36-.672-.719-.719-.187-.015-.25-.093-.25-.187 0-.188.313-.328.625-.328.453 0 .844.281 1.25.86.313.452.64.655 1.031.655s.641-.14 1-.5c.266-.265.47-.5.657-.656"/></svg>
+        <span>GitHub<span class="brand-sub"> / Arcade</span></span>
+      </a>
+      <div class="top-actions">
+        <button id="theme" class="chip" type="button" aria-pressed="false" title="Toggle dark mode">Dark mode</button>
+        <button id="music" class="chip" type="button" aria-pressed="true" title="Toggle the original chiptune (M toggles all audio)">Music on</button>
+        <button id="sound" class="chip" type="button" aria-pressed="true" title="Toggle sound effects (M toggles all audio)">SFX on</button>
+        <button id="help" class="chip round" type="button" aria-label="How to play">?</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="heading">
+        <div>
+          <p class="eyebrow">BREAK COMMITS. SQUASH BUGS. MERGE THE PR.</p>
+          <h1>Mona <span>Breaker</span><b class="edition">3D</b></h1>
+        </div>
+        <div class="controls-hint" aria-hidden="true"><kbd>←</kbd><kbd>→</kbd><span>or mouse to move</span><kbd>Space</kbd><span>launch</span><kbd>P</kbd><span>pause</span></div>
+      </section>
+
+      <section class="game-shell" aria-label="Mona Breaker game">
+        <div class="game-toolbar">
+          <div class="repo">
+            <span class="branch-icon" aria-hidden="true">⑂</span>
+            <div><span class="label">REPOSITORY</span><strong id="repo-name">hello-world</strong></div>
+            <span class="branch-tag" id="branch">main</span>
+          </div>
+          <div class="scoreboard">
+            <div><span class="label">SCORE</span><strong id="score">00000</strong></div>
+            <div><span class="label">BEST</span><strong id="best">00000</strong></div>
+            <div><span class="label">LEVEL</span><strong id="level">01</strong></div>
+            <div><span class="label">LIVES</span><strong id="lives" class="lives" aria-label="3 lives">♥♥♥</strong></div>
+          </div>
+        </div>
+
+        <div class="stage" id="stage" tabindex="0" data-status="loading"
+          aria-label="3D brick breaker. Move with the mouse, arrow keys or A and D, or drag on touch screens. Press Space or tap to launch. P pauses.">
+          <canvas id="scene" aria-hidden="true"></canvas>
+          <div class="stage-buttons">
+            <button id="new-game" type="button" title="New game: level 1, zero score, three lives" disabled>New game</button>
+            <button id="pause" type="button" title="Pause (P or Esc)" aria-label="Pause game" disabled>Ⅱ</button>
+          </div>
+          <div class="serve-hint" id="serve-hint" hidden>Press <kbd>Space</kbd>, click or tap to launch</div>
+          <div class="message" id="message">
+            <p class="eyebrow" id="message-kicker">README.md</p>
+            <h2 id="message-title">Merge the pull request.</h2>
+            <p id="message-detail">Break every commit square to merge. Catch power-ups; dodge falling bugs.</p>
+            <button id="primary" class="primary" type="button" disabled>Start game <span aria-hidden="true">→</span></button>
+          </div>
+        </div>
+
+        <div class="effects" aria-label="Active power-ups">
+          <span class="effect" id="fx-copilot" data-type="copilot" data-active="false"><i aria-hidden="true"></i><span>Copilot <small>multi-ball + auto-aim</small></span><b>--</b></span>
+          <span class="effect" id="fx-dependabot" data-type="dependabot" data-active="false"><i aria-hidden="true"></i><span>Dependabot <small>shield</small></span><b>--</b></span>
+          <span class="effect" id="fx-actions" data-type="actions" data-active="false"><i aria-hidden="true"></i><span>Actions <small>lasers</small></span><b>--</b></span>
+          <span class="effect" id="fx-regression" data-type="regression" data-active="false"><i aria-hidden="true"></i><span>Regression <small>short paddle</small></span><b>--</b></span>
+        </div>
+
+        <div class="progress-row">
+          <div><span class="live-dot"></span><b id="remaining">0</b> commits left to merge</div>
+          <div class="progress-track"><i id="progress-fill"></i></div>
+          <span id="percentage">0%</span>
+        </div>
+        <p class="sr-only" id="announcer" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="legend" aria-label="Legend">
+        <span class="legend-title">IN THIS REPO</span>
+        <span><i class="swatch c1"></i><i class="swatch c2"></i><i class="swatch c3"></i><i class="swatch c4"></i>Commits (darker = more hits)</span>
+        <span><i class="swatch conflict"></i>Merge conflict (unbreakable)</span>
+        <span><i class="swatch bug"></i>Bug brick</span>
+        <span><i class="swatch copilot"></i>Copilot</span>
+        <span><i class="swatch dependabot"></i>Dependabot</span>
+        <span><i class="swatch actions"></i>Actions</span>
+      </section>
+
+      <footer>
+        <span>An unofficial fan game. Not affiliated with or endorsed by GitHub.</span>
+        <span>ALL CHECKS HAVE PASSED. PROBABLY.</span>
+      </footer>
+    </main>
+  </div>
+
+  <dialog id="help-dialog" aria-labelledby="help-title">
+    <button id="close-help" class="dialog-close" type="button" aria-label="Close instructions">×</button>
+    <p class="eyebrow">CONTRIBUTING.md</p>
+    <h2 id="help-title">How to merge</h2>
+    <p>Mona pushes the paddle. Bounce the ball into the contribution-graph squares. Darker commits need more hits. Break every commit to merge the pull request and move on to the next repository. Merge conflicts are unbreakable and are not required.</p>
+    <div class="help-grid">
+      <div><h3>Keyboard</h3><p><kbd>←</kbd> <kbd>→</kbd> or <kbd>A</kbd> <kbd>D</kbd> move. <kbd>Space</kbd> launches. <kbd>P</kbd> or <kbd>Esc</kbd> pauses. <kbd>M</kbd> mutes all audio.</p></div>
+      <div><h3>Mouse and touch</h3><p>Move the mouse or drag across the board to steer. Click or tap to launch.</p></div>
+    </div>
+    <h3>Power-ups</h3>
+    <ul class="help-list">
+      <li><i class="swatch copilot"></i><b>Copilot</b>: two extra balls and 10 seconds of auto-aim toward the nearest commit.</li>
+      <li><i class="swatch dependabot"></i><b>Dependabot</b>: a 15-second shield saves one dropped ball and patches bugs you catch.</li>
+      <li><i class="swatch actions"></i><b>Actions</b>: 8 seconds of automatic lasers that break commits and zap bugs.</li>
+      <li><i class="swatch bug"></i><b>Bugs</b> fall from bug bricks. Catching one without a shield shortens the paddle for 8 seconds.</li>
+    </ul>
+    <p>You have three lives. Your best score is saved in this browser. The game pauses when it loses focus.</p>
+    <button id="got-it" class="primary" type="button">Got it <span aria-hidden="true">→</span></button>
+  </dialog>
+</body>
+</html>

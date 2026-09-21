@@ -1,0 +1,19 @@
+{
+  "name": "mona-breaker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A 3D GitHub-themed brick breaker starring Mona.",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "test": "node --test tests/*.test.js",
+    "build": "node scripts/build.mjs",
+    "cabinet:setup": "node scripts/setup-cabinet.mjs",
+    "cabinet:serve": "node scripts/serve-cabinet.mjs",
+    "test:cabinet": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.58.2"
+  }
+}

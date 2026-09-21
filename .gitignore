@@ -1,0 +1,7 @@
+node_modules/
+_site/
+.playwright-cabinet/
+test-results/
+playwright-report/
+.DS_Store
+*.log
