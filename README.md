@@ -126,7 +126,8 @@ An unofficial fan game, not a GitHub product. Not affiliated with or endorsed
 by GitHub.
 
 - Mona is drawn procedurally with Three.js primitives, following
-  [Mona's Merge Maze](https://github.com/filmgirl/mona-maze). The Octocat design
+  [Mona's Merge Maze](https://github.com/filmgirl/mona-maze). The pixel Octocat
+  favicon (`assets/favicon.svg`) is drawn for this project. The Octocat design
   is copyright GitHub, Inc. and subject to
   [GitHub's artwork terms](https://octodex.github.com/faq/).
 - GitHub mark: [Primer Octicons](https://github.com/primer/octicons), under its
