@@ -5,10 +5,10 @@ import { extname, join, normalize, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const root = fileURLToPath(new URL('..', import.meta.url));
-export const PUBLISHED = ['index.html', 'style.css', 'src', 'vendor', 'assets'];
+export const PUBLISHED = ['index.html', 'manifest.webmanifest', 'style.css', 'src', 'vendor', 'assets'];
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
-  '.svg': 'image/svg+xml', '.txt': 'text/plain; charset=utf-8', '.json': 'application/json', '.png': 'image/png',
+  '.svg': 'image/svg+xml', '.txt': 'text/plain; charset=utf-8', '.json': 'application/json', '.webmanifest': 'application/manifest+json', '.png': 'image/png',
 };
 
 export function resolvePublished(baseDir, urlPath) {

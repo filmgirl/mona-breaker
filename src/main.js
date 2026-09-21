@@ -665,6 +665,8 @@ $('theme').addEventListener('click', () => {
 function syncThemeButton() {
   $('theme').setAttribute('aria-pressed', String(isDark()));
   $('theme').textContent = isDark() ? 'Light mode' : 'Dark mode';
+  // Keep the browser/installed-app title bar in step with the in-game theme.
+  for (const meta of document.querySelectorAll('meta[name="theme-color"]')) meta.content = isDark() ? '#25232f' : '#f7f4e9';
 }
 let pausedForHelp = false;
 $('help').addEventListener('click', () => {

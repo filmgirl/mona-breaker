@@ -8,6 +8,11 @@ break the contribution graph, squash bugs, and merge the pull request.
 Play online at **<https://filmgirl.github.io/mona-breaker/>**, or in the
 [Commit Cabinet](https://filmgirl.github.io/arcade/).
 
+It can also be installed as an app: use **Install** in Chrome or Edge's address
+bar, or **Share → Add to Home Screen** on iPhone and iPad. The app uses the same
+pixel Mona icon as the favicon. It is not offline-capable: there is no service
+worker, so it still loads the game from GitHub Pages and needs a connection.
+
 Or run the local preview server with Node.js 22 or newer. There is nothing to
 install or build for the game itself:
 
@@ -69,6 +74,10 @@ npm test              # Node tests for the simulation
 npm start
 ```
 
+The favicon and app icons (`assets/favicon.svg`, `assets/*.png`) are generated
+from one 16x16 pixel map in `scripts/icons.mjs`. Edit the map, then run
+`npm run icons`; a test fails if the committed icons drift from the map.
+
 `src/engine.js` is a DOM-free simulation, so the rules are unit tested in Node.
 Three.js r180 is vendored in `vendor/` exactly as published on npm; there is no
 bundler, transpiler, or CDN request.
@@ -113,11 +122,12 @@ use **GitHub Actions** as its source (Settings → Pages).
 | File | Purpose |
 | --- | --- |
 | `index.html`, `style.css` | Interface, themes, and responsive layout |
+| `manifest.webmanifest` | Web app manifest for installing the game |
 | `src/engine.js` | Physics, bricks, power-ups, bugs, lives, and levels |
 | `src/main.js` | Three.js rendering, input, HUD, audio, and storage |
 | `src/music.js` | Original synthesized Web Audio chiptune |
 | `vendor/` | Three.js r180 module build and its MIT license |
-| `scripts/` | Preview server, site staging, and cabinet harness |
+| `scripts/` | Preview server, site staging, icon generator, and cabinet harness |
 | `tests/` | Node engine tests and the Playwright cabinet suite |
 
 ## Credits
@@ -127,7 +137,8 @@ by GitHub.
 
 - Mona is drawn procedurally with Three.js primitives, following
   [Mona's Merge Maze](https://github.com/filmgirl/mona-maze). The pixel Octocat
-  favicon (`assets/favicon.svg`) is drawn for this project. The Octocat design
+  favicon and app icons (`assets/favicon.svg`, `assets/*.png`) are drawn for
+  this project. The Octocat design
   is copyright GitHub, Inc. and subject to
   [GitHub's artwork terms](https://octodex.github.com/faq/).
 - GitHub mark: [Primer Octicons](https://github.com/primer/octicons), under its
