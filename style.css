@@ -144,6 +144,8 @@ h1 span { color: var(--lavender-deep); }
 .swatch.c3 { background: var(--commit-3); } .swatch.c4 { background: var(--commit-4); }
 .swatch.conflict { background: repeating-linear-gradient(45deg, var(--conflict) 0 3px, var(--surface) 3px 6px); }
 footer { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-top: 12px; border-top: 2px solid var(--border); font: 10px ui-monospace, monospace; letter-spacing: 1px; color: var(--soft); }
+footer .arcade-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--lavender-deep); font: 650 12px/1.5 "Mona Sans", "Segoe UI", -apple-system, BlinkMacSystemFont, Aptos, sans-serif; letter-spacing: 0; text-underline-offset: 3px; }
+footer .arcade-link:hover { color: var(--ink); }
 
 dialog { width: min(560px, calc(100% - 24px)); max-height: min(460px, calc(100% - 24px)); margin: 12px auto auto; overflow: auto; overscroll-behavior: contain; padding: 24px; color: var(--ink); background: var(--surface); border: 2px solid var(--ink); border-radius: 18px; box-shadow: var(--shadow); }
 dialog::backdrop { background: rgba(37, 35, 47, 0.45); }

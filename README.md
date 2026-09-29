@@ -5,8 +5,8 @@ break the contribution graph, squash bugs, and merge the pull request.
 
 ## Play
 
-Play online at **<https://filmgirl.github.io/mona-breaker/>**, or in the
-[Commit Cabinet](https://filmgirl.github.io/arcade/).
+Play online at **<https://filmgirl.github.io/mona-breaker/>**, or find more games in
+[GitHub Arcade](https://filmgirl.github.io/arcade/).
 
 It can also be installed as an app: use **Install** in Chrome or Edge's address
 bar, or **Share → Add to Home Screen** on iPhone and iPad. The app uses the same
@@ -37,6 +37,7 @@ scripts there.
 | Theme, music, effects | Separate buttons in the header |
 
 Space and the arrow keys never scroll the page, even when a button has focus.
+Navigation links keep their normal keyboard behavior instead of controlling the game.
 The game pauses when its window or tab loses focus, including when you use the
 cabinet's toolbar.
 
@@ -83,6 +84,9 @@ Three.js r180 is vendored in `vendor/` exactly as published on npm; there is no
 bundler, transpiler, or CDN request.
 
 ## Cabinet compatibility
+
+The footer's GitHub Arcade link is shown only on the standalone site, not inside
+an iframe, so it cannot navigate the cabinet's game frame back into the cabinet.
 
 The Playwright suite runs the real [Commit Cabinet](https://github.com/filmgirl/arcade)
 at a pinned commit with the staged game on the same origin, like GitHub Pages:
