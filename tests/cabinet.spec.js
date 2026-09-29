@@ -35,6 +35,7 @@ async function readyGame(page) {
   await expect.poll(() => page.frames().find((f) => f.url() === candidate)?.url()).toBe(candidate);
   const frame = page.frames().find((f) => f.url() === candidate);
   await expect.poll(() => stageData(frame, 'status'), { timeout: 30_000 }).toBe('ready');
+  await expect(frame.locator('#arcade-link')).toBeHidden();
   // A blank WebGL canvas compresses to almost nothing; a rendered board does not.
   await expect.poll(async () => (await frame.locator('#scene').screenshot()).length, { message: 'WebGL board rendered', timeout: 30_000 }).toBeGreaterThan(20_000);
   return frame;
@@ -66,6 +67,32 @@ test('serves the real pinned cabinet with only the Mona Breaker entry changed', 
   for (const file of ['index.html', 'styles.css', 'src/app.js', 'src/catalog.js']) {
     expect(await (await request.get(`/arcade/${file}`)).text()).toBe(await readFile(`${cabinetRoot}/${file}`, 'utf8'));
   }
+});
+
+test('standalone Arcade link is keyboard accessible without controlling the game', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'Keyboard coverage runs on desktop.');
+  await page.goto(candidate);
+  await expect.poll(() => stageData(page, 'status'), { timeout: 30_000 }).toBe('ready');
+  const link = page.getByRole('link', { name: 'More games in GitHub Arcade', exact: true });
+  await expect(link).toBeVisible();
+  await expect(link).toHaveAttribute('href', 'https://filmgirl.github.io/arcade/');
+  expect(await link.getAttribute('target')).toBeNull();
+  await page.locator('#primary').click();
+  await expect.poll(() => stageData(page, 'status')).toBe('serving');
+  await page.locator('#pause').focus();
+  await page.keyboard.press('Tab');
+  await expect(link).toBeFocused();
+  const x = await stageData(page, 'paddle-x');
+  await page.keyboard.down('ArrowRight');
+  await page.waitForTimeout(150);
+  await page.keyboard.up('ArrowRight');
+  expect(await stageData(page, 'paddle-x')).toBe(x);
+  for (const key of ['Space', 'p', 'm']) await page.keyboard.press(key);
+  expect(await stageData(page, 'status')).toBe('serving');
+  await expect(page.locator('#music')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('#sound')).toHaveAttribute('aria-pressed', 'true');
+  await page.keyboard.press('Enter');
+  await expect(page).toHaveURL('https://filmgirl.github.io/arcade/');
 });
 
 for (const launch of ['mouse', 'keyboard']) {

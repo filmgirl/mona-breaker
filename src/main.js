@@ -5,6 +5,7 @@ import { Chiptune } from './music.js';
 const $ = (id) => document.getElementById(id);
 const stage = $('stage');
 const canvas = $('scene');
+$('arcade-link').hidden = window.self !== window.top;
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const STORAGE = { best: 'mona-breaker-best', theme: 'mona-breaker-theme', audio: 'mona-breaker-audio' };
 
@@ -584,7 +585,7 @@ function updateAxis() {
 }
 const KEY_DIR = { ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right' };
 document.addEventListener('keydown', (e) => {
-  if ($('help-dialog').open || e.ctrlKey || e.metaKey || e.altKey || !game) return;
+  if ($('help-dialog').open || e.target.closest('a[href]') || e.ctrlKey || e.metaKey || e.altKey || !game) return;
   const dir = KEY_DIR[e.code] ?? ({ a: 'left', A: 'left', d: 'right', D: 'right' })[e.key];
   if (dir) { e.preventDefault(); held.add(dir); updateAxis(); return; }
   if (e.code === 'ArrowUp' || e.code === 'ArrowDown') { e.preventDefault(); return; }
@@ -599,7 +600,7 @@ document.addEventListener('keydown', (e) => {
 });
 // Buttons activate on Space keyup; keep Space for the game even when a button has focus.
 document.addEventListener('keyup', (e) => {
-  if (e.code === 'Space' && !$('help-dialog').open) e.preventDefault();
+  if (e.code === 'Space' && !$('help-dialog').open && !e.target.closest('a[href]')) e.preventDefault();
   const dir = KEY_DIR[e.code] ?? ({ a: 'left', A: 'left', d: 'right', D: 'right' })[e.key];
   if (dir) { held.delete(dir); updateAxis(); }
 });
